@@ -47,6 +47,8 @@ h2{font-size:34px;margin:0;letter-spacing:-.03em}
 .meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
 .pill{border:1px solid var(--line);padding:4px 8px;border-radius:6px;font:11px monospace;color:#b8c2d0}
 .card a{color:var(--accent);font-size:14px;font-weight:700}
+.card a.dataset-link{display:block;margin-top:10px;font-size:12px;font-family:monospace;font-weight:400;color:var(--muted);border:1px solid var(--line);padding:4px 10px;border-radius:6px;width:fit-content}
+.card a.dataset-link:hover{color:var(--accent);border-color:var(--accent)}
 .feature{grid-column:span 2}
 .feature-inner{display:grid;grid-template-columns:1fr .7fr;gap:30px}
 .metric{border-left:1px solid var(--line);padding-left:25px}
@@ -138,18 +140,13 @@ footer{padding:35px 0;color:var(--muted);font-size:13px}
       <div class="meta"><span class="pill">JavaScript</span><span class="pill">ML</span><span class="pill">Education</span></div>
       <a href="https://github.com/XenosPro" target="_blank">Try demo →</a>
 </article>
-</article>
     <article class="card">
-      <div class="tag">04 / INTERACTIVE</div><h3>final_project</h3>
-      <p>medical prediction tool</p>
-      <div class="meta"><span class="pill">JavaScript</span><span class="pill">ML</span><span class="pill">Education</span></div>
+      <div class="tag">05 / DEPLOYED</div><h3>Insurance Cost Predictor</h3>
+      <p>Regression model estimating medical insurance charges from age, BMI, smoker status and more — Linear Regression, Random Forest and XGBoost compared.</p>
+      <div class="meta"><span class="pill">Python</span><span class="pill">XGBoost</span><span class="pill">Streamlit</span></div>
       <a href="https://xenospro-mby6albdvmq8kk9zddmyej.streamlit.app/" target="_blank">Try demo →</a>
+      <a href="https://www.kaggle.com/datasets/mirichoi0218/insurance" target="_blank" rel="noopener noreferrer" class="dataset-link">📊 Dataset: Medical Cost Personal Datasets</a>
 </article>
-    <a href="https://www.kaggle.com/datasets/mirichoi0218/insurance"
-   target="_blank" rel="noopener noreferrer"
-   class="dataset-link">
-  📊 Dataset: Medical Cost Personal Datasets (Kaggle)
-</a>
   </div>
 </div>
 </section>
