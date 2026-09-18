@@ -1,5 +1,7 @@
 import os
 import json
+import time
+
 from dotenv import load_dotenv
 from google import genai
 
@@ -66,11 +68,24 @@ Rules:
 
             questions = json.loads(text)
 
+            if not isinstance(questions, list):
+                raise ValueError("Gemini did not return a JSON list.")
+
+            if len(questions) != number:
+                raise ValueError(
+                    f"Expected {number} questions, got {len(questions)}."
+                )
+
             return questions
 
         except Exception as e:
 
-            if attempt == 2:
-                raise e
+            print(
+                f"Gemini attempt {attempt + 1}/3 failed: "
+                f"{type(e).__name__}: {e}"
+            )
 
-            time.sleep(3)
+            if attempt < 2:
+                time.sleep(3)
+            else:
+                raise
