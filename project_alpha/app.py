@@ -4,6 +4,9 @@ from game import get_question, check_answer
 from scoring import calculate_xp
 
 
+MAX_QUESTIONS = 10
+
+
 # -------------------------
 # INITIALIZE GAME
 # -------------------------
@@ -20,8 +23,14 @@ if "score" not in st.session_state:
 if "streak" not in st.session_state:
     st.session_state.streak = 0
 
+if "best_streak" not in st.session_state:
+    st.session_state.best_streak = 0
+
 if "question_number" not in st.session_state:
     st.session_state.question_number = 1
+
+if "correct_answers" not in st.session_state:
+    st.session_state.correct_answers = 0
 
 if "answered" not in st.session_state:
     st.session_state.answered = False
@@ -29,6 +38,68 @@ if "answered" not in st.session_state:
 if "last_result" not in st.session_state:
     st.session_state.last_result = None
 
+if "game_finished" not in st.session_state:
+    st.session_state.game_finished = False
+
+
+# -------------------------
+# END OF GAME
+# -------------------------
+
+if st.session_state.game_finished:
+
+    st.title("Quiz Complete")
+
+    st.divider()
+
+    st.metric("XP", st.session_state.score)
+
+    st.metric(
+        "Correct Answers",
+        f"{st.session_state.correct_answers}/{MAX_QUESTIONS}"
+    )
+
+    st.metric(
+        "Best Streak",
+        st.session_state.best_streak
+    )
+
+    accuracy = (
+        st.session_state.correct_answers / MAX_QUESTIONS
+    ) * 100
+
+    st.metric(
+        "Accuracy",
+        f"{accuracy:.0f}%"
+    )
+
+    st.divider()
+
+    if st.button("Play Again"):
+
+        st.session_state.current_question = get_question()
+
+        st.session_state.previous_questions = []
+
+        st.session_state.score = 0
+        st.session_state.streak = 0
+        st.session_state.best_streak = 0
+
+        st.session_state.question_number = 1
+        st.session_state.correct_answers = 0
+
+        st.session_state.answered = False
+        st.session_state.last_result = None
+        st.session_state.game_finished = False
+
+        st.rerun()
+
+    st.stop()
+
+
+# -------------------------
+# CURRENT QUESTION
+# -------------------------
 
 question = st.session_state.current_question
 
@@ -42,15 +113,21 @@ st.title("AI Trainer")
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.metric("XP", st.session_state.score)
+    st.metric(
+        "XP",
+        st.session_state.score
+    )
 
 with col2:
-    st.metric("Streak", st.session_state.streak)
+    st.metric(
+        "Streak",
+        st.session_state.streak
+    )
 
 with col3:
     st.metric(
         "Question",
-        st.session_state.question_number
+        f"{st.session_state.question_number}/{MAX_QUESTIONS}"
     )
 
 st.divider()
@@ -70,7 +147,7 @@ selected = st.radio(
 
 
 # -------------------------
-# SUBMIT
+# SUBMIT ANSWER
 # -------------------------
 
 if not st.session_state.answered:
@@ -78,6 +155,7 @@ if not st.session_state.answered:
     if st.button("Submit Answer"):
 
         if selected is None:
+
             st.warning("Choose an answer first.")
 
         else:
@@ -90,6 +168,16 @@ if not st.session_state.answered:
             if correct:
 
                 st.session_state.streak += 1
+
+                st.session_state.correct_answers += 1
+
+                if (
+                    st.session_state.streak
+                    > st.session_state.best_streak
+                ):
+                    st.session_state.best_streak = (
+                        st.session_state.streak
+                    )
 
                 xp = calculate_xp(
                     True,
@@ -113,6 +201,7 @@ if not st.session_state.answered:
                 )
 
             st.session_state.answered = True
+
             st.rerun()
 
 
@@ -126,7 +215,9 @@ if st.session_state.answered:
 
     if correct:
 
-        st.success(f"Correct! +{xp} XP")
+        st.success(
+            f"Correct! +{xp} XP"
+        )
 
     else:
 
@@ -138,24 +229,37 @@ if st.session_state.answered:
 
     st.info(question["explanation"])
 
+
     # -------------------------
     # NEXT QUESTION
     # -------------------------
 
-    if st.button("Next Question"):
+    if st.session_state.question_number < MAX_QUESTIONS:
 
-        st.session_state.previous_questions.append(
-            question["question"]
-        )
+        if st.button("Next Question"):
 
-        st.session_state.current_question = get_question(
-            topic=question["topic"],
-            difficulty=question["difficulty"],
-            previous_questions=st.session_state.previous_questions
-        )
+            st.session_state.previous_questions.append(
+                question["question"]
+            )
 
-        st.session_state.question_number += 1
-        st.session_state.answered = False
-        st.session_state.last_result = None
+            st.session_state.current_question = get_question(
+                topic=question["topic"],
+                difficulty=question["difficulty"],
+                previous_questions=(
+                    st.session_state.previous_questions
+                )
+            )
 
-        st.rerun()
+            st.session_state.question_number += 1
+            st.session_state.answered = False
+            st.session_state.last_result = None
+
+            st.rerun()
+
+    else:
+
+        if st.button("Finish Quiz"):
+
+            st.session_state.game_finished = True
+
+            st.rerun()
