@@ -1,82 +1,100 @@
 import os
-import json
 import time
 
 from dotenv import load_dotenv
 from google import genai
+from pydantic import BaseModel, Field
+
 
 load_dotenv()
 
 
-def generate_questions(topic="machine learning", difficulty="easy", number=5):
+class QuizQuestion(BaseModel):
+    question: str = Field(description="The multiple-choice question")
+    options: list[str] = Field(
+        description="Exactly 4 possible answers"
+    )
+    answer: str = Field(
+        description="The exact correct answer from the options"
+    )
+    topic: str
+    difficulty: str
+    explanation: str = Field(
+        description="Short explanation of the correct answer"
+    )
+
+
+def generate_question(
+    topic="machine learning",
+    difficulty="easy",
+    previous_questions=None
+):
 
     client = genai.Client(
         api_key=os.environ["GEMINI_API_KEY"]
     )
 
-    prompt = f"""
-Generate {number} multiple-choice quiz questions about {topic}.
+    previous_questions = previous_questions or []
 
+    previous_text = "\n".join(
+        f"- {q}" for q in previous_questions
+    )
+
+    prompt = f"""
+Generate ONE multiple-choice quiz question.
+
+Topic: {topic}
 Difficulty: {difficulty}
 
-The questions are for a student learning machine learning and deep learning.
+The question is for a student learning
+machine learning and deep learning.
 
-Return ONLY valid JSON.
-Do not use markdown.
-Do not add explanations outside the JSON.
+Requirements:
 
-Use exactly this format:
+- Exactly 4 options.
+- Only one option is correct.
+- The answer must exactly match one of the options.
+- The question must be factually accurate.
+- Provide a short explanation.
+- Do NOT repeat any previous question.
 
-[
-    {{
-        "question": "Question text",
-        "options": [
-            "Option 1",
-            "Option 2",
-            "Option 3",
-            "Option 4"
-        ],
-        "answer": "The exact correct option",
-        "topic": "{topic}",
-        "difficulty": "{difficulty}",
-        "explanation": "Short explanation of why the answer is correct."
-    }}
-]
+Previous questions:
+{previous_text}
 
-Rules:
-- Exactly 4 options per question.
-- Only one correct answer.
-- "answer" must exactly match one of the options.
-- Make the questions factually accurate.
-- Do not repeat questions.
+Generate a NEW question.
 """
 
     for attempt in range(3):
 
         try:
+
             response = client.models.generate_content(
-                model="gemini-3.6-flash",
-                contents=prompt
+                model="gemini-3.8-flash",
+                contents=prompt,
+                config={
+                    "response_mime_type": "application/json",
+                    "response_schema": QuizQuestion,
+                },
             )
 
-            text = response.text.strip()
+            question = response.parsed
 
-            if text.startswith("```"):
-                text = text.replace("```json", "")
-                text = text.replace("```", "")
-                text = text.strip()
-
-            questions = json.loads(text)
-
-            if not isinstance(questions, list):
-                raise ValueError("Gemini did not return a JSON list.")
-
-            if len(questions) != number:
+            if question is None:
                 raise ValueError(
-                    f"Expected {number} questions, got {len(questions)}."
+                    "Gemini returned no structured question."
                 )
 
-            return questions
+            if len(question.options) != 4:
+                raise ValueError(
+                    "Question does not contain exactly 4 options."
+                )
+
+            if question.answer not in question.options:
+                raise ValueError(
+                    "Correct answer is not one of the options."
+                )
+
+            return question.model_dump()
 
         except Exception as e:
 
@@ -86,6 +104,8 @@ Rules:
             )
 
             if attempt < 2:
-                time.sleep(3)
-            else:
-                raise
+                time.sleep(2)
+
+    raise RuntimeError(
+        "Unable to generate a new question after 3 attempts."
+    )
