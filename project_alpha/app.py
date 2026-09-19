@@ -1,6 +1,6 @@
 import streamlit as st
 
-from game import get_questions, check_answer
+from game import get_question, check_answer
 from scoring import calculate_xp
 
 
@@ -8,21 +8,20 @@ from scoring import calculate_xp
 # INITIALIZE GAME
 # -------------------------
 
-if "questions" not in st.session_state:
-    st.session_state.questions = get_questions(
-        topic="machine learning",
-        difficulty="easy",
-        number=5
-    )
+if "current_question" not in st.session_state:
+    st.session_state.current_question = get_question()
 
-if "question_index" not in st.session_state:
-    st.session_state.question_index = 0
+if "previous_questions" not in st.session_state:
+    st.session_state.previous_questions = []
 
 if "score" not in st.session_state:
     st.session_state.score = 0
 
 if "streak" not in st.session_state:
     st.session_state.streak = 0
+
+if "question_number" not in st.session_state:
+    st.session_state.question_number = 1
 
 if "answered" not in st.session_state:
     st.session_state.answered = False
@@ -31,33 +30,7 @@ if "last_result" not in st.session_state:
     st.session_state.last_result = None
 
 
-# -------------------------
-# CURRENT QUESTION
-# -------------------------
-
-questions = st.session_state.questions
-index = st.session_state.question_index
-
-if index >= len(questions):
-
-    st.title("Level Complete")
-
-    st.metric("XP", st.session_state.score)
-    st.metric("Best Streak", st.session_state.streak)
-
-    if st.button("Play Again"):
-        st.session_state.questions = get_questions()
-        st.session_state.question_index = 0
-        st.session_state.score = 0
-        st.session_state.streak = 0
-        st.session_state.answered = False
-        st.session_state.last_result = None
-        st.rerun()
-
-    st.stop()
-
-
-question = questions[index]
+question = st.session_state.current_question
 
 
 # -------------------------
@@ -77,9 +50,8 @@ with col2:
 with col3:
     st.metric(
         "Question",
-        f"{index + 1}/{len(questions)}"
+        st.session_state.question_number
     )
-
 
 st.divider()
 
@@ -160,18 +132,30 @@ if st.session_state.answered:
 
         st.error("Incorrect.")
 
-        correct_answer = question["answer"]
-
         st.write(
-            f"Correct answer: **{correct_answer}**"
+            f"Correct answer: **{question['answer']}**"
         )
 
     st.info(question["explanation"])
 
+    # -------------------------
+    # NEXT QUESTION
+    # -------------------------
+
     if st.button("Next Question"):
 
-        st.session_state.question_index += 1
+        st.session_state.previous_questions.append(
+            question["question"]
+        )
+
+        st.session_state.current_question = get_question(
+            topic=question["topic"],
+            difficulty=question["difficulty"],
+            previous_questions=st.session_state.previous_questions
+        )
+
+        st.session_state.question_number += 1
         st.session_state.answered = False
         st.session_state.last_result = None
+
         st.rerun()
-        

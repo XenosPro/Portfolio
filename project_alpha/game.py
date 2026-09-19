@@ -1,4 +1,4 @@
-from llm import generate_questions
+from llm import generate_question
 
 
 # Backup questions used if Gemini is temporarily unavailable
@@ -32,26 +32,31 @@ FALLBACK_QUESTIONS = [
 ]
 
 
-def get_questions(
+def get_question(
     topic="machine learning",
     difficulty="easy",
-    number=5
+    previous_questions=None
 ):
     try:
-        questions = generate_questions(
+        return generate_question(
             topic=topic,
             difficulty=difficulty,
-            number=number
+            previous_questions=previous_questions
         )
 
-        return questions
+    except Exception as e:
+        print(f"Gemini unavailable: {e}")
+        print("Using fallback question.")
 
-    except Exception:
-        print("Gemini unavailable. Using fallback questions.")
+        previous_questions = previous_questions or []
 
-        return FALLBACK_QUESTIONS
+        for question in FALLBACK_QUESTIONS:
+            if question["question"] not in previous_questions:
+                return question
+
+        # If all fallback questions were used, restart the fallback bank
+        return FALLBACK_QUESTIONS[0]
 
 
 def check_answer(question, selected_answer):
     return selected_answer == question["answer"]
-
