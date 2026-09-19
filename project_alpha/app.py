@@ -12,7 +12,9 @@ MAX_QUESTIONS = 10
 # -------------------------
 
 if "current_question" not in st.session_state:
-    st.session_state.current_question = get_question()
+    st.session_state.current_question = get_question(
+        previous_questions=[]
+    )
 
 if "previous_questions" not in st.session_state:
     st.session_state.previous_questions = []
@@ -52,7 +54,10 @@ if st.session_state.game_finished:
 
     st.divider()
 
-    st.metric("XP", st.session_state.score)
+    st.metric(
+        "XP",
+        st.session_state.score
+    )
 
     st.metric(
         "Correct Answers",
@@ -77,9 +82,21 @@ if st.session_state.game_finished:
 
     if st.button("Play Again"):
 
-        st.session_state.current_question = get_question()
+        # Generate a new question while keeping
+        # the questions from previous games.
+        st.session_state.current_question = get_question(
+            topic="machine learning",
+            difficulty="easy",
+            previous_questions=(
+                st.session_state.previous_questions
+            )
+        )
 
-        st.session_state.previous_questions = []
+        # IMPORTANT:
+        # Do NOT clear previous_questions here.
+        #
+        # This allows the AI to see questions
+        # from previous games and avoid repeating them.
 
         st.session_state.score = 0
         st.session_state.streak = 0
@@ -227,7 +244,9 @@ if st.session_state.answered:
             f"Correct answer: **{question['answer']}**"
         )
 
-    st.info(question["explanation"])
+    st.info(
+        question["explanation"]
+    )
 
 
     # -------------------------
@@ -238,9 +257,13 @@ if st.session_state.answered:
 
         if st.button("Next Question"):
 
-            st.session_state.previous_questions.append(
-                question["question"]
-            )
+            # Save the current question to history
+            # BEFORE generating the next one.
+            if question["question"] not in st.session_state.previous_questions:
+
+                st.session_state.previous_questions.append(
+                    question["question"]
+                )
 
             st.session_state.current_question = get_question(
                 topic=question["topic"],
@@ -251,7 +274,9 @@ if st.session_state.answered:
             )
 
             st.session_state.question_number += 1
+
             st.session_state.answered = False
+
             st.session_state.last_result = None
 
             st.rerun()
@@ -259,6 +284,13 @@ if st.session_state.answered:
     else:
 
         if st.button("Finish Quiz"):
+
+            # Save the final question to history.
+            if question["question"] not in st.session_state.previous_questions:
+
+                st.session_state.previous_questions.append(
+                    question["question"]
+                )
 
             st.session_state.game_finished = True
 
