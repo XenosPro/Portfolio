@@ -103,6 +103,43 @@ section{padding:82px 0;border-top:1px solid var(--line)}
 h2{font-size:34px;margin:0;letter-spacing:-.03em}
 .section-head p{color:var(--muted);max-width:520px;margin:0}
 
+.about-grid{
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:18px;
+}
+.about-copy,.about-side{
+  background:linear-gradient(145deg,var(--panel),var(--panel2));
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:28px;
+}
+.about-copy p{color:var(--muted);margin:0 0 16px;font-size:16px}
+.about-copy p:last-child{margin-bottom:0}
+.about-side{display:flex;flex-direction:column;justify-content:center;gap:16px}
+.about-line{
+  display:grid;
+  grid-template-columns:110px 1fr;
+  gap:14px;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--line);
+}
+.about-line:last-child{border-bottom:0;padding-bottom:0}
+.about-line span{font:12px monospace;color:var(--green);text-transform:uppercase;letter-spacing:.05em}
+.about-line b{font-size:14px;font-weight:600;color:#dbe5f1}
+.contact-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  padding:24px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:linear-gradient(145deg,var(--panel),var(--panel2));
+}
+.contact-card p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.contact-email{font:15px monospace;color:var(--accent);word-break:break-all}
+
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
 .card{
   background:linear-gradient(145deg,var(--panel),var(--panel2));
@@ -172,13 +209,14 @@ body::before{
 }
 @media (prefers-reduced-motion:reduce){#neural-bg{display:none}}
 @media(max-width:800px){
-  .hero-grid,.feature-inner{grid-template-columns:1fr}
+  .hero-grid,.feature-inner,.about-grid{grid-template-columns:1fr}
   .grid{grid-template-columns:1fr}
   .card.feature{grid-column:span 1}
   .capabilities,.skills{grid-template-columns:1fr 1fr}
   .links{display:none}
   .hero{min-height:auto;padding-top:65px}
   .metric{border-left:0;border-top:1px solid var(--line);padding-left:0;padding-top:20px}
+  .contact-card{align-items:flex-start;flex-direction:column}
 }
 @media(max-width:520px){
   .capabilities,.skills{grid-template-columns:1fr}
@@ -193,6 +231,7 @@ body::before{
   <div class="container nav">
     <a class="logo" href="#">anis<span>.ai</span></a>
     <div class="links">
+      <a href="#about">About</a>
       <a href="#projects">Projects</a>
       <a href="#expertise">Expertise</a>
       <a href="#stack">Stack</a>
@@ -234,6 +273,44 @@ body::before{
     </div>
   </div>
 </header>
+
+<section id="about">
+  <div class="container">
+    <div class="section-head">
+      <h2>About Me</h2>
+      <p>I build practical AI and machine-learning projects that move from experimentation to working applications.</p>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-copy">
+        <p>
+          I'm Anis, an AI & Machine Learning developer focused on Python, machine learning,
+          deep learning, LLM integrations and deployed applications.
+        </p>
+        <p>
+          I enjoy taking projects end to end: preparing data, training and evaluating models,
+          building APIs and interfaces, then turning the result into something people can actually use.
+        </p>
+        <p>My approach is simple: learn, build, evaluate, improve and ship.</p>
+      </div>
+
+      <div class="about-side">
+        <div class="about-line">
+          <span>Focus</span>
+          <b>AI · Machine Learning · Python</b>
+        </div>
+        <div class="about-line">
+          <span>Work</span>
+          <b>Models · APIs · Full-stack applications</b>
+        </div>
+        <div class="about-line">
+          <span>Approach</span>
+          <b>End-to-end projects from idea to deployment</b>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section id="projects">
   <div class="container">
@@ -450,10 +527,19 @@ body::before{
         <div class="status"><span class="dot"></span> Building and shipping new AI projects</div>
         <h2>Let's build something useful.</h2>
       </div>
-      <p>Open to interesting AI, machine-learning, Python and data projects.</p>
+      <p>Open to AI, machine-learning, Python, data and full-stack project opportunities.</p>
     </div>
-    <div class="buttons">
-      <a class="btn primary" href="https://github.com/XenosPro" target="_blank" rel="noopener noreferrer">View GitHub ↗</a>
+
+    <div class="contact-card">
+      <div>
+        <div class="tag">DIRECT CONTACT</div>
+        <div class="contact-email">anisabdess01@gmail.com</div>
+        <p>For project discussions, collaboration or work opportunities.</p>
+      </div>
+      <div class="buttons" style="margin-top:0">
+        <a class="btn primary" href="mailto:anisabdess01@gmail.com?subject=Portfolio%20Contact">Email Me →</a>
+        <a class="btn" href="https://github.com/XenosPro" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      </div>
     </div>
   </div>
 </section>
