@@ -1,9 +1,9 @@
-from llm import generate_questions
+from llm import generate_question
 
-questions = generate_questions(
+question = generate_question(
     topic="neural networks",
     difficulty="easy",
-    number=3
+    previous_questions=[]
 )
 
-print(questions)
+print(question)
