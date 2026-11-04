@@ -343,6 +343,27 @@ footer{padding:25px 0;background:var(--dark);color:#777c72;font:10px "DM Mono",m
   .contact-email{font-size:27px}
   .footer-inner{flex-direction:column}
 }
+/* V3 project spotlight — scoped to Cats vs. Dogs; other cards are unchanged. */
+.project.cats .project-bottom{flex-direction:column;align-items:flex-start;gap:16px}
+.cats-insight{
+  font:11px "DM Mono",monospace;color:#ffcb8a;
+  border-left:2px solid rgba(255,186,105,.62);
+  padding-left:12px;margin:0 0 20px;line-height:1.65;
+}
+.cats-actions{display:flex;flex-wrap:wrap;gap:9px}
+.cats-actions .project-link{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:36px;padding:8px 11px;border:1px solid rgba(255,195,122,.34);
+  background:rgba(7,15,30,.32);font-size:10px;text-decoration:none;
+  transition:background .22s ease,border-color .22s ease,transform .22s ease;
+}
+.cats-actions .project-link:hover{
+  background:rgba(255,176,88,.16);border-color:rgba(255,195,122,.75);
+  transform:translateY(-2px);
+}
+.cats-actions .project-link.primary{
+  background:rgba(255,174,88,.18);border-color:rgba(255,195,122,.68);color:#ffe0b7;
+}
 </style>
 </head>
 
@@ -529,25 +550,32 @@ footer{padding:25px 0;background:var(--dark);color:#777c72;font:10px "DM Mono",m
 
       <article class="project half reveal cats" data-category="dl ml">
         <div>
-          <div class="project-num">PROJECT 06 / LIVE AI DEMO</div>
-          <h3>Cats vs. Dogs — Transfer Learning</h3>
+          <div class="project-num">PROJECT 06 / DEPLOYED AI · ROBUSTNESS</div>
+          <h3>Cats vs. Dogs — Two-Stage AI</h3>
           <p>
-            An interactive image classifier powered by VGG16 transfer learning.
-            Upload a cat or dog photograph to see real-time predictions and model
-            confidence scores through a deployed Streamlit application.
+            Built a VGG16 transfer-learning classifier and evolved it into an experimental
+            two-model Streamlit application. MobileNetV2 screens for potentially unsupported
+            images before VGG16 predicts Cat or Dog.
           </p>
+          <div class="cats-insight">
+            ENGINEERING INSIGHT / A lion was confidently classified as a dog in V1.
+            V3 can flag unfamiliar images instead of always forcing a binary answer.
+            This gate is experimental and may still make mistakes.
+          </div>
         </div>
         <div class="project-bottom">
           <div class="tags">
             <span class="tag">Python</span>
             <span class="tag">TensorFlow</span>
-            <span class="tag">Keras</span>
             <span class="tag">VGG16</span>
+            <span class="tag">MobileNetV2</span>
             <span class="tag">Streamlit</span>
+            <span class="tag">Robustness</span>
           </div>
-          <div style="display:flex;gap:18px;flex-wrap:wrap;">
-            <a class="project-link" href="https://cats-dogs-vgg16-demo.streamlit.app/" target="_blank" rel="noopener noreferrer">Live demo →</a>
-            <a class="project-link" href="https://github.com/XenosPro/cats-dogs-vgg16-demo" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          <div class="cats-actions" aria-label="Cats vs Dogs project links">
+            <a class="project-link primary" href="https://cats-dogs-v3-experimental.streamlit.app/" target="_blank" rel="noopener noreferrer" aria-label="Try the experimental Cats vs Dogs V3 demo">V3 EXPERIMENTAL ↗</a>
+            <a class="project-link" href="https://cats-dogs-vgg16-demo.streamlit.app/" target="_blank" rel="noopener noreferrer" aria-label="Open the original Cats vs Dogs demo">V2 ORIGINAL ↗</a>
+            <a class="project-link" href="https://github.com/XenosPro/cats-dogs-vgg16-demo" target="_blank" rel="noopener noreferrer" aria-label="View the Cats vs Dogs source code">GITHUB ↗</a>
           </div>
         </div>
       </article>
