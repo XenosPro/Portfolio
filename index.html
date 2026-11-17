@@ -380,6 +380,31 @@ section{padding:120px 0;border-bottom:1px solid var(--line)}
 
 .project.flappy{--project-glow:rgba(87,190,255,.34);--project-base:rgba(17,65,100,.9)}
 
+/* Tebnidja: a text-first private-review case study, with no public demo link. */
+
+.project.tebnidja{
+  grid-column:span 12;
+  min-height:260px;
+  --project-glow:rgba(249,103,173,.27);
+  --project-base:rgba(62,24,59,.88);
+}
+
+.project.tebnidja::before{
+  background:
+    radial-gradient(circle at 87% 17%,rgba(255,128,186,.26),transparent 30%),
+    radial-gradient(circle at 14% 86%,rgba(102,217,255,.13),transparent 32%),
+    linear-gradient(130deg,rgba(66,26,64,.95),rgba(11,20,46,.88)),
+    repeating-linear-gradient(120deg,transparent 0 38px,rgba(255,200,227,.045) 39px 40px);
+}
+
+.project.tebnidja .tag{border-color:rgba(255,174,209,.22);color:#f4c8df}
+
+.project.tebnidja .project-status{
+  font:11px "DM Mono",monospace;
+  color:#ffcade;
+  line-height:1.5;
+}
+
 .project.insurance::before{
 
   background:
@@ -884,7 +909,7 @@ footer{padding:25px 0;background:var(--dark);color:#777c72;font:10px "DM Mono",m
 
       </div>
 
-      <div class="project-count" id="project-count">06 projects</div>
+      <div class="project-count" id="project-count">07 projects</div>
 
     </div>
 
@@ -1057,6 +1082,31 @@ footer{padding:25px 0;background:var(--dark);color:#777c72;font:10px "DM Mono",m
           <div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span><span class="tag">Canvas</span></div>
 
           <a class="project-link" href="https://xenospro.github.io/flappy-bird/" target="_blank" rel="noopener noreferrer">Play →</a>
+
+        </div>
+
+      </article>
+
+      <article class="project tebnidja reveal" data-category="fullstack">
+
+        <div>
+
+          <div class="project-num">PROJECT 07 / RESTAURANT WEB EXPERIENCE</div>
+
+          <h3>Tebnidja Cherchelloise</h3>
+
+          <p>A mobile-friendly restaurant website featuring a 69-item panoramic menu,
+          persistent shopping cart, and WhatsApp-ready order summaries.
+          Built with vanilla JavaScript, backed by 128 automated tests, and
+          deployed to Cloudflare Pages behind private access controls.</p>
+
+        </div>
+
+        <div class="project-bottom">
+
+          <div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span><span class="tag">Node.js</span><span class="tag">Cloudflare Pages</span><span class="tag">Testing</span></div>
+
+          <span class="project-status" aria-label="Project in private client review">PRIVATE PREVIEW · OWNER REVIEW IN PROGRESS</span>
 
         </div>
 
